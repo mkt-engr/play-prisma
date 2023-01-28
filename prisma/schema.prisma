@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"] //複数スキーマを扱う
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["schema01", "schema02"] //スキーマの種類
+}
+
+// 同一のモデルの名前は定義できない
+model BatchExecutionTime01 {
+  id         Int      @id @default(autoincrement())
+  updateDate DateTime @default(now()) @updatedAt
+
+  @@map("batch_execution_time") //batch_execution_timeテーブルにマッピングする（SQLは大文字小文字を区別しないのでテーブル名はスネークケース）
+  @@schema("schema01") //schema01スキーマにマッピングする
+}
+
+model BatchExecutionTime02 {
+  id         Int      @id @default(autoincrement())
+  updateDate DateTime @default(now()) @updatedAt
+
+  @@map("batch_execution_time") //batch_execution_timeテーブルにマッピングする
+  @@schema("schema02") //schema02スキーマにマッピングする
+}
