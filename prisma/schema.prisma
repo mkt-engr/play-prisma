@@ -15,7 +15,7 @@ datasource db {
 // 同一のモデルの名前は定義できない
 model BatchExecutionTime01 {
   id         Int      @id @default(autoincrement())
-  updateDate DateTime @default(now()) @updatedAt
+  updateDate DateTime @default(now())
 
   @@map("batch_execution_time") //batch_execution_timeテーブルにマッピングする（SQLは大文字小文字を区別しないのでテーブル名はスネークケース）
   @@schema("schema01") //schema01スキーマにマッピングする
