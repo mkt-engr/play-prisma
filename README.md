@@ -89,7 +89,48 @@ export class BatchModule {}
 
 ```
 
+コントローラーを編集してエンドポイントを作成
+```ts:src/batch/batch.controller.ts
+@Controller('batch')
+export class BatchController {
+  constructor(private readonly batchService: BatchService) {}
+
+  @Post('/01')
+  upsertSchema01BatchExecutionTime() {
+    return this.batchService.upsertSchema01BatchExecutionTime();
+  }
+
+  @Post('/02')
+  upsertSchema02BatchExecutionTime() {
+    return this.batchService.upsertSchema02BatchExecutionTime();
+  }
+}
+
+```
+
 サービスも変更
 ```ts:src/batch/batch.service.ts
+@Injectable()
+export class BatchService {
+  constructor(private prisma: PrismaService) {}
 
+  //バッチ1実行したときに実行時間を記録
+  upsertSchema01BatchExecutionTime() {
+    const jaTime = dayjs().add(9, 'hour');
+    return this.prisma.batchExecutionTime01.upsert({
+      where: { id: 1 },
+      update: { updateAt: jaTime.toDate() },
+      create: {},
+    });
+  }
+
+  //バッチ2実行したときに実行時間を記録
+  upsertSchema02BatchExecutionTime() {
+    return this.prisma.batchExecutionTime01.upsert({
+      where: { id: 1 },
+      update: { updateAt: new Date() },
+      create: {},
+    });
+  }
+}
 ```
